@@ -27,7 +27,7 @@ def add_task(description):
     new_task = {
         'id': id,
         'description': description,
-        'status': "in-progress",
+        'status': "todo",
         'createdAt': datetime.now().isoformat(timespec='seconds'),
         'updatedAt': datetime.now().isoformat(timespec='seconds')
     }
@@ -36,17 +36,20 @@ def add_task(description):
     write_tasks(tasks)
     print(f"Task {description} created with id {id}.")
 
-def list_tasks():
+def list_tasks(status=None):
     tasks = load_tasks()
     if not tasks:
         print("Empty tasks list.")
-    else:
-        for task in tasks:
-            print(f"Task Id: {task['id']}\n"
-                  f"Description: {task['description']}\n"
-                  f"Status: {task['status']}\n"
-                  f"Created At: {datetime.fromisoformat(task['createdAt'])}\n"
-                  f"Updated At: {datetime.fromisoformat(task['updatedAt'])}.\n")
+
+    if status:
+        tasks = [task for task in tasks if task['status'] == status]
+    
+    for task in tasks:
+        print(f"Task Id: {task['id']}\n"
+              f"Description: {task['description']}\n"
+              f"Status: {task['status']}\n"
+              f"Created At: {datetime.fromisoformat(task['createdAt'])}\n"
+              f"Updated At: {datetime.fromisoformat(task['updatedAt'])}.\n")
 
 def update_tasks(id, status):
     tasks = load_tasks()
@@ -78,12 +81,18 @@ def main():
     
     if user_command == "add":
         add_task(sys.argv[2]) # second argument is task description
-    if user_command == "list":
-        list_tasks()
-    if user_command == "update":
-        update_tasks(sys.argv[2], sys.argv[3]) #2nd arg is task id, 3rd arg is task status
-    if user_command == "delete":
+    elif user_command == "list":
+        status = sys.argv[2] if len(sys.argv) > 2 else None
+        list_tasks(status)
+    elif user_command == "update":
+        if sys.argv[3] in ['todo', 'in-progress', 'done']:
+            update_tasks(sys.argv[2], sys.argv[3]) #2nd arg is task id, 3rd arg is task status
+        else:
+            print("Please provide a valid status.\ntodo | in-progress | done")
+    elif user_command == "delete":
         delete_tasks(sys.argv[2]) #2nd arg is task id
+    else:
+        print("Please provide a valid command.\nadd 'description' | list | update 'id' 'status' | delete 'id'")
 
 if __name__ == "__main__":
     main()
