@@ -1,6 +1,6 @@
 # Task Tracker CLI App
 
-A simple Command Line Interface (CLI) project to track and manage tasks. 
+A simple Command Line Interface (CLI) project to track and manage tasks. [Project Link] (https://roadmap.sh/projects/task-tracker)
 
 ## Features
 - Add a new task
